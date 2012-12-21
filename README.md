@@ -3,7 +3,7 @@
 
 This extensions provide a Node.js application (notification server), and a set of Yii class for the easy usage.
 
-Please notice: at the current stage this is only a tech demo.
+Please notice: at the current stage this is only a tech demo, as many error handling and function are not implemented yet.
 
 ### Requirements:
 
