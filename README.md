@@ -1,9 +1,9 @@
 # yii-vNotifier
 
 
-This extensions provide a Node.js application (notification server), and a set of Yii class for the easy usage.
+This extension provides a Node.js application (notification server), and a set of Yii classes for easy usage.
 
-Please notice: at the current stage this is only a tech demo, as many error handling and function are not implemented yet.
+Please note: at the current stage this is only a tech demo, as many error handling and functions are not implemented yet.
 
 ### Requirements:
 
@@ -12,7 +12,7 @@ Please notice: at the current stage this is only a tech demo, as many error hand
 * Node.js modules: redis, socket.io
 * Working Redis server 
 
-### What's in?
+### What's included?
 
 * Node.js server app (in /bin)
 * <a href="https://github.com/nrk/predis">predis library</a>
@@ -35,7 +35,7 @@ Please notice: at the current stage this is only a tech demo, as many error hand
         'class' => 'ext.yii-vNotifier.VNotifier',
         'redisConnectionString' => 'tcp://examplt.com:3000', // optional redis connection string
         'socketioUrl' => 'http://localhost', // optional socket.io url, if omitted the request's hostname will be used
-        'socketioPort' => 4001, // optionsl, if omitted 4001 will be used
+        'socketioPort' => 4001, // optional, if omitted 4001 will be used
       ),
   ),
 ...
