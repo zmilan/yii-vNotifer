@@ -10,12 +10,12 @@ Please note: at the current stage this is only a tech demo, as many error handli
 
 * Working Node.js
 * Node.js modules: redis, socket.io
-* Working Redis server 
+* Working Redis server
+* <a href="https://github.com/nrk/predis">predis library</a> copied into the notifier extension folder
 
 ### What's included?
 
 * Node.js server app (in /bin)
-* <a href="https://github.com/nrk/predis">predis library</a>
 * Notifier application component
 * WebUser base class
 * Notification area widget
@@ -32,11 +32,11 @@ Please note: at the current stage this is only a tech demo, as many error handli
       ),
       ...
       'notifier' => array(
-        'class' => 'ext.yii-vNotifier.VNotifier',
-        'redisConnectionString' => 'tcp://examplt.com:3000', // optional redis connection string
-        'socketioUrl' => 'http://localhost', // optional socket.io url, if omitted the request's hostname will be used
-        'socketioPort' => 4001, // optional, if omitted 4001 will be used
-      ),
+    	    'class' => 'ext.yii-vNotifier.VNotifier',
+          'messageStoreConfig' => array(	
+              'class' => 'LocalMessageStore',
+			    ),
+		  ),
   ),
 ...
 ```
