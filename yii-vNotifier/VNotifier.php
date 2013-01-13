@@ -6,23 +6,17 @@
  * @author pgee
  */
 
-require dirname(__FILE__).'/Predis/Autoloader.php';
 
-Predis\Autoloader::register();
+Yii::setPathOfAlias('vNotifier',dirname(__FILE__));
+Yii::import('vNotifier.LocalMessageStore');
 
 class VNotifier extends CApplicationComponent {
-
 	/**
 	 * Should we save the notifications to a persistent database or not
 	 * @var boolean
 	 */
 	public $saveHistory = false;
 
-	/**
-	 * Redis connection string
-	 * @var string
-	 */
-	public $redisConnectionString = null;
 
 	/**
 	 * Url of the notification server
@@ -34,12 +28,16 @@ class VNotifier extends CApplicationComponent {
 	 * @var string
 	 */
 	public $socketioPort = 4001;
-
 	/**
-	 * Our Redis Client
-	 * @var Predis\Client
+	 * Config params of the message store
+	 * @var array
 	 */
-	private $_rc;
+	public $messageStoreConfig = array();
+	/**
+	 * MessageStore object
+	 * @var IMessageStore
+	 */
+	private $_ms;
 
 	public function init() {
 		parent::init();
@@ -48,8 +46,11 @@ class VNotifier extends CApplicationComponent {
 			// set the default notification server url
 			$this->socketioUrl = Yii::app()->request->getHostInfo().':'.$this->socketioPort;
 		}
-		
-		$this->_rc = new \Predis\Client($this->redisConnectionString);	
+
+		$this->_ms = Yii::createComponent($this->messageStoreConfig);
+		if(! $this->_ms instanceof IMessageStore) {
+			throw new CException('Message Store must implement IMessageStore');
+		}
 	}
 
 	/**
@@ -70,34 +71,23 @@ class VNotifier extends CApplicationComponent {
 	}
 
 	/**
-	 * Publish the given message to redis
+	 * Publish the given message to the message store
 	 * @param type $channel
 	 * @param type $message
 	 */
 	private function publish($channel,$message) {
-		if(is_array($message)) {
-			$message = CJSON::encode($message);
-		}
-		$this->_rc->publish($channel,$message);	
+		$this->_ms->publishMessage($channel,$message);
 	}
 	
 	/**
-	 * Reads the user's secret from redis
+	 * Reads the user's secret from the message store
 	 * @param type $user_id
 	 * @return type
 	 */
 	public function getUserSecret($user_id) {
-		return $this->_rc->get($user_id);
+		return $this->_ms->getUserSecret($user_id);
 	}
 
-	/**
-	 * Generates a random hash
-	 * @return string
-	 */
-	private static function genSecret() {
-//		return Yii::app()->securityManager->generateRandomKey();
-		return sprintf('%08x%08x%08x%08x',mt_rand(),mt_rand(),mt_rand(),mt_rand()); 
-	}
 
 	/**
 	 * Generates a uniqe secret hash for the given user
@@ -105,14 +95,7 @@ class VNotifier extends CApplicationComponent {
 	 * @return type
 	 */
 	public function generateUserSecret($user_id) {
-		$secret = self::genSecret();
-		while($this->_rc->exists($secret)) {
-			$secret = self::genSecret();
-		}
-
-		$this->_rc->set($user_id,$secret);
-
-		return $secret;
+		$this->_ms->generateUserSecret($user_id);
 	}
 
 }
