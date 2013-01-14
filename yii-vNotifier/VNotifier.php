@@ -1,15 +1,15 @@
 <?php
 
+Yii::setPathOfAlias('vNotifier',dirname(__FILE__));
+Yii::import('vNotifier.LocalMessageStore');
+
 /**
  * VdxNotification Singleton application component
  *
  * @author pgee
+ * @method string getUserSecret($user_id) Returns the specified user's secret hash
+ * @method string generateUserSecret($user_id) Generates and save and returns secret hash
  */
-
-
-Yii::setPathOfAlias('vNotifier',dirname(__FILE__));
-Yii::import('vNotifier.LocalMessageStore');
-
 class VNotifier extends CApplicationComponent {
 	/**
 	 * Should we save the notifications to a persistent database or not
@@ -78,26 +78,15 @@ class VNotifier extends CApplicationComponent {
 	private function publish($channel,$message) {
 		$this->_ms->publishMessage($channel,$message);
 	}
-	
-	/**
-	 * Reads the user's secret from the message store
-	 * @param type $user_id
-	 * @return type
-	 */
-	public function getUserSecret($user_id) {
-		return $this->_ms->getUserSecret($user_id);
+
+	public function __call($name, $parameters) {
+		if(in_array($name, array('getUserSecret','generateUserSecret'))) {
+			// proxy request to the message store
+			return call_user_func_array(array($this->_ms,$name), $parameters);
+		} else {
+			return parent::__call($name, $parameters);
+		}
 	}
-
-
-	/**
-	 * Generates a uniqe secret hash for the given user
-	 * @param type $user_id
-	 * @return type
-	 */
-	public function generateUserSecret($user_id) {
-		$this->_ms->generateUserSecret($user_id);
-	}
-
 }
 
 ?>

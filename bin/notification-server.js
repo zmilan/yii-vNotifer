@@ -11,7 +11,6 @@ io.configure(function() {
 	io.set('authorization',function(handshakeData,callback) {
 		if(handshakeData.query.secret) {
 			// when the user's secret is in redis then we trust him as an authenticated user
-			// TODO: check secret in redis
 			if(redisClient.get(handshakeData.query.secret)) {
 				callback(null,true);
 			} else {
@@ -40,6 +39,7 @@ io.sockets.on('connection',function(socket) {
 	_redisClient.subscribe(secret);
 	// subscribe to the broadcast channel
 	_redisClient.subscribe('broadcast');
+	
 	// TODO: subscribe to group channels (a.k.a rooms)
 });
 
