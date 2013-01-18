@@ -1,7 +1,9 @@
 <?php
 
 Yii::setPathOfAlias('vNotifier',dirname(__FILE__));
+Yii::import('vNotifier.IMessageStore');
 Yii::import('vNotifier.LocalMessageStore');
+Yii::import('vNotifier.vdxMessageStore');
 
 /**
  * VdxNotification Singleton application component

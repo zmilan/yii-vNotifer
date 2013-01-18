@@ -4,8 +4,6 @@ require dirname(__FILE__).'/Predis/Autoloader.php';
 
 Predis\Autoloader::register();
 
-Yii::import('vNotifier.IMessageStore');
-
 /**
  * Description of LocalMessageStore
  *
