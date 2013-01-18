@@ -6,8 +6,7 @@ vn = {};
  * @class
  */
 vn.Client = function(config) {
-		// socket io client
-		console.log(config);
+	// socket io client
 	var socket = io.connect(config.socketioUrl + '?secret=' + config.userSecret);
 	
 	// handle notify event
