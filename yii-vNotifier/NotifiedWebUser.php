@@ -68,8 +68,8 @@ class NotifiedWebUser extends CWebUser {
 	 * Shortcut to notity the currently logged in user
 	 * @param type $message
 	 */
-	public function notify($message) {
-		$this->getNotifier()->send($this->id,$message);
+	public function notify($message,$type='notification') {
+		$this->getNotifier()->send($this->id,$message,$type);
 	}
 
 }

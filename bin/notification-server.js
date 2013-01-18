@@ -32,7 +32,7 @@ io.sockets.on('connection',function(socket) {
 	
 	// when the redis client gets a message from the subscribed channels, we are sending back to the user's browser via socket.io
 	_redisClient.on('message',function(channel,message) {
-		socket.emit('notify',message);
+		socket.emit('notify',JSON.parse(message));
 	});
 	
 	// subscribe to the user's own channel

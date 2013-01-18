@@ -11,8 +11,10 @@ vn.Client = function(config) {
 	
 	// handle notify event
 	socket.on('notify',function(notification) {
-		if(vn.NotificationHandlers['__default__']) {
-			vn.NotificationHandlers['__default__'](notification);
+		if(vn.NotificationHandlers[notification.type]) {
+			vn.NotificationHandlers[notification.type](notification.message);
+		} else {
+			vn.NotificationHandlers['__default__'](notification.message);
 		}
 	});
 }
@@ -20,6 +22,10 @@ vn.Client = function(config) {
 /**
  * Custom Notification handlers
  */
-vn.NotificationHandlers = {};
+vn.NotificationHandlers = {
+	__default__ : function(message) {
+		console.log(message);
+	}
+};
 
 

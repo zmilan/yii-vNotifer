@@ -58,16 +58,16 @@ class VNotifier extends CApplicationComponent {
 	 * @param type $user_id
 	 * @param type $message
 	 */
-	public function send($user_id,$message) {
-		$this->publish($this->getUserSecret($user_id), $message);
+	public function send($user_id,$message,$type = 'notification') {
+		$this->publish($this->getUserSecret($user_id), $message, $type);
 	}
 	
 	/**
 	 * Send a broadcast message
 	 * @param type $message
 	 */
-	public function broadcast($message) {
-		$this->publish('broadcast', $message);
+	public function broadcast($message,$type = 'notification') {
+		$this->publish('broadcast', $message, $type);
 	}
 
 	/**
@@ -75,8 +75,11 @@ class VNotifier extends CApplicationComponent {
 	 * @param type $channel
 	 * @param type $message
 	 */
-	private function publish($channel,$message) {
-		$this->_ms->publishMessage($channel,$message);
+	private function publish($channel,$message,$type) {
+		$this->_ms->publishMessage($channel,  CJSON::encode(array(
+			'type' => $type,
+			'message' => $message,
+		)));
 	}
 
 	public function __call($name, $parameters) {
