@@ -1,29 +1,26 @@
 /**
  * @namespace
  */
-vNotifier = {};
+vn = {};
 /**
  * @class
  */
-vNotifier.Client = function(config) {
+vn.Client = function(config) {
 		// socket io client
-	var socket = io.connect(config.socketioUrl + '?secret=' + config.userSecret),
-		// notification area
-		notificationArea = document.getElementById('notification-area'),
-		// KnockoutJS View Model
-		viewModel = {
-			notifications : ko.observableArray()
-		};
-
-	ko.applyBindings(viewModel,notificationArea);
+		console.log(config);
+	var socket = io.connect(config.socketioUrl + '?secret=' + config.userSecret);
 	
 	// handle notify event
-	socket.on('notify',function(message) {
-		viewModel.notifications.push({message : message});
-		// auto remove first message after 5sec
-		setTimeout(function() {
-			viewModel.notifications.shift();
-		}, 5000);
+	socket.on('notify',function(notification) {
+		if(vn.NotificationHandlers['__default__']) {
+			vn.NotificationHandlers['__default__'](notification);
+		}
 	});
-
 }
+
+/**
+ * Custom Notification handlers
+ */
+vn.NotificationHandlers = {};
+
+
