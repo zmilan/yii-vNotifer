@@ -46,7 +46,7 @@ class vdxMessageStore extends CComponent implements IMessageStore {
 
 		$responseHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		if($responseHttpCode == 403) {
-			throw new CException('Your app secret is not valid'.$this->appSecret);
+			throw new CException('Your app secret is not valid');
 		} elseif($responseHttpCode == 200) {
 			// nop
 		} else {
