@@ -15,16 +15,30 @@ class vdxMessageStore extends CComponent implements IMessageStore {
 	 * Hostname of the apiserver
 	 * @var string
 	 */
-	public $apiHost = 'localhost';
-	public $apiPort = 1337;
+//	public $apiUrl = 'localhost:1337;
+	public $apiUrl = 'http://vdx-messagestore.eu01.aws.af.cm';
+	public $appSecret = 'Coming Soon';
 
-	public function __construct() {
+	/**
+	 * Returns the url where socket.io listens
+	 * @return  string
+	 */
+	public function getSocketIOUrl() {
+		return $this->apiUrl;
 	}
 
+	/**
+	 * Makes an api call
+	 * @param string $url the action as a pathname
+	 * @param array $data the params of the specified action
+	 * @return array the response from the api server
+	 */
 	private function api($url,$data) {
 		$ch = curl_init();
+
+		$data['__app_secret__'] = $this->appSecret; 
 		
-		curl_setopt($ch,CURLOPT_URL, 'http://'.$this->apiHost.':'.$this->apiPort.$url);
+		curl_setopt($ch,CURLOPT_URL, $this->apiUrl.$url);
 		curl_setopt($ch,CURLOPT_POSTFIELDS, CJSON::encode($data));
 		curl_setopt($ch,CURLOPT_RETURNTRANSFER, 1);
 

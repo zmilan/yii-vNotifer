@@ -10,6 +10,7 @@ Predis\Autoloader::register();
  * @author pgee
  */
 class LocalMessageStore extends CComponent implements IMessageStore {
+	public $socketioPort = 4001;
 	/**
 	 * Redis connection string
 	 * @var string
@@ -21,8 +22,16 @@ class LocalMessageStore extends CComponent implements IMessageStore {
 	 */
 	private $_rc;
 
+	/**
+	 * The port where socket.io listens
+	 * @var string
+	 */
 	public function __construct() {
 		$this->_rc = new \Predis\Client($this->redisConnectionString);	
+	}
+
+	public function getSocketIOUrl() {
+		return Yii::app()->request->getHostInfo().':'.$this->socketioPort;
 	}
 
 	/**

@@ -19,17 +19,6 @@ class VNotifier extends CApplicationComponent {
 	 */
 	public $saveHistory = false;
 
-
-	/**
-	 * Url of the notification server
-	 * @var string
-	 */
-	public $socketioUrl;
-	/**
-	 * The port where socket.io listens
-	 * @var string
-	 */
-	public $socketioPort = 4001;
 	/**
 	 * Config params of the message store
 	 * @var array
@@ -44,15 +33,18 @@ class VNotifier extends CApplicationComponent {
 	public function init() {
 		parent::init();
 		
-		if(!isset($this->socketioUrl)) {
-			// set the default notification server url
-			$this->socketioUrl = Yii::app()->request->getHostInfo().':'.$this->socketioPort;
-		}
-
 		$this->_ms = Yii::createComponent($this->messageStoreConfig);
 		if(! $this->_ms instanceof IMessageStore) {
 			throw new CException('Message Store must implement IMessageStore');
 		}
+	}
+
+	/**
+	 * Returns the url where socket.io listens
+	 * @return string
+	 */
+	public function getSocketIOUrl() {
+		return $this->_ms->getSocketIOUrl();
 	}
 
 	/**

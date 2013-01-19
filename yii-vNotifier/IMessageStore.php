@@ -5,6 +5,11 @@
  */
 interface IMessageStore {
 	/**
+	 * Returns the url where socket.io listens
+	 * @return string
+	 */
+	public function getSocketIOUrl();
+	/**
 	 * Generates a secret hash for the specified user if he or she don't have or $refresh is true and saves it to the store.
 	 * @param string $user_id
 	 * @param boolean $refresh
