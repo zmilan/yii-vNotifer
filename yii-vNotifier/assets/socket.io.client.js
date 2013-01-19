@@ -5,9 +5,14 @@ vn = {};
 /**
  * @class
  */
-vn.Client = function(config) {
+vn.Client = function(clientConfig) {
 	// socket io client
-	var socket = io.connect(config.socketioUrl + '?secret=' + config.userSecret);
+	var config = {};
+	if(clientConfig.socketioUrl.match(/aws\.af\.cm/)) {
+		// API Server hosted on AppFog
+		config.transport = ['xhr-polling'];
+	}
+	var socket = io.connect(clientConfig.socketioUrl + '?secret=' + clientConfig.userSecret);
 	
 	// handle notify event
 	socket.on('notify',function(notification) {
